@@ -20,7 +20,7 @@
  *
  * @package    
  * @copyright  2019 Danilo Madrigalejos
- * @license    http://www.gnu.dan/copyleft/gpl.html gnu gpl v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html gnu gpl v3 or later
  */
 
 
@@ -35,5 +35,22 @@ $PAGE->set_title(get_string('todo:managetodo', 'local_todo'));
 $PAGE->set_pagelayout('admin');
 require_capability('local/todo:managetodo', $context);
 
+$returnurl = new moodle_url('/local/todo/manage.php');
+
+$framework = new stdClass();
+$framework->description = '';
+$framework->description_editor = '';
+$PAGE->navbar->add(get_string('todo:managetodo', 'local_todo'), $returnurl);
+$PAGE->navbar->add(get_string('addtodo', 'local_todo'));
+
+$editoroptions = array('maxfiles' => 0, 'maxbytes'=>$CFG->maxbytes, 'trusttext'=>false, 'noclean'=>true, 'context' => $context);
+$customdata = array(
+    'framework' => $framework,
+    'editoroptions' => $editoroptions,
+);
+$mform = new \local_todo\forms\add_todo_form(null, $customdata);
+$framework = file_prepare_standard_editor($framework, 'description', $editoroptions, $context, 'local_todo', 0);
+
 echo $OUTPUT->header();
+$mform->display();
 echo $OUTPUT->footer();
