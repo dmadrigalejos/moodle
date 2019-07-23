@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,14 +16,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * You may localized strings in your plugin
+ * Add todo
  *
- * @package    local_todo
+ * @package    
  * @copyright  2019 Danilo Madrigalejos
- * @license    http://www.gnu.org/copyleft/gpl.html gnu gpl v3 or later
+ * @license    http://www.gnu.dan/copyleft/gpl.html gnu gpl v3 or later
  */
 
-$string['pluginname'] = 'Todo';
-$string['todo'] = 'Todo';
-$string['todo:managetodo'] = 'Manage';
-$string['addtodo']='Add todo';
+
+require_once('../../config.php');
+
+ 
+require_login();
+$context = context_system::instance();
+$PAGE->set_url('/local/todo/add_todo.php');
+$PAGE->set_context($context);
+$PAGE->set_title(get_string('todo:managetodo', 'local_todo'));
+$PAGE->set_pagelayout('admin');
+require_capability('local/todo:managetodo', $context);
+
+echo $OUTPUT->header();
+echo $OUTPUT->footer();
