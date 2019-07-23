@@ -24,5 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-if ($ADMIN->fulltree) {
-}
+$ADMIN->add('root', new admin_category('todo', get_string('todo', 'local_todo')));
+$ADMIN->add('todo', new admin_externalpage('managetodo', get_string('todo:managetodo', 'local_todo'), 
+        $CFG->wwwroot.'/local/todo/manage.php', 'local/todo:managetodo'));

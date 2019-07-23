@@ -23,3 +23,5 @@
  */
 
 $string['pluginname'] = 'Todo';
+$string['todo'] = 'Todo';
+$string['todo:managetodo'] = 'Manage';

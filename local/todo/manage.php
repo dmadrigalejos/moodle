@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,16 +16,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Manager Class for Frameworks
  *
- * @package   local_todo
- * @copyright 2019 Danilo Madrigalejos
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    
+ * @copyright  2019 Danilo Madrigalejos
+ * @license    http://www.gnu.org/copyleft/gpl.html gnu gpl v3 or later
  */
+require_once('../../config.php');
+ 
+require_login();
+$context = context_system::instance();
+$PAGE->set_url('/local/todo/manage.php');
+$PAGE->set_context(context_system::instance());
+$PAGE->set_title(get_string('todo:managetodo', 'local_todo'));
+$PAGE->set_pagelayout('admin');
+require_capability('local/todo:managetodo', $context);
 
-defined('MOODLE_INTERNAL') || die();
+echo $OUTPUT->header();
 
-$plugin->version   = 2014061101.01;      // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2014050800;      // Requires this Moodle version.
-$plugin->component = 'local_todo';// Full name of the plugin (used for diagnostics).
-$plugin->cron      = 0;
+echo $OUTPUT->footer();
