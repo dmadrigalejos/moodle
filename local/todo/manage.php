@@ -34,7 +34,14 @@ require_capability('local/todo:managetodo', $context);
 
 echo $OUTPUT->header();
 
+$manager = new \local_todo\manager;
 $addurl = new moodle_url('/local/todo/add_todo.php');
+
+$templatecontext = [
+    'todos' => array_values($manager->get_todos())
+];
+
+echo $OUTPUT->render_from_template('local_todo/todolist', $templatecontext);
 echo $OUTPUT->single_button($addurl, get_string('addtodo', 'local_todo'));
 
 echo $OUTPUT->footer();

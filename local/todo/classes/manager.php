@@ -27,6 +27,20 @@ namespace local_todo;
 defined('MOODLE_INTERNAL') || die();
 
 class manager{
+    /**
+     * Get list of todos
+     * @global \local_todo\type $DB
+     * @return type
+     */
+    public static function get_todos(){
+        global $DB;
+        
+        $query = 'SELECT id, name, description FROM {local_todo}';
+        $todos = $DB->get_records_sql($query);
+        
+        return $todos;
+    }
+
     public function create_todo($data, $editoroptions){
         global $DB, $USER;
         
