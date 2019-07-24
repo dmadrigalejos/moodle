@@ -28,3 +28,7 @@ $string['todo:managetodo'] = 'Manage';
 $string['addtodo']='Add todo';
 $string['addsuccess']='Add successful!';
 $string['editsuccess']='Edit successful!';
+$string['error:todoinvalid']='Invalid todo id';
+$string['tododelete']='Are you sure you want to delete todo "{$a}"?';
+$string['tododeleted']='Todo successfully deleted';
+$string['error:errordelete']='Error deleting todo';

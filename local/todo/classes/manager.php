@@ -86,4 +86,28 @@ class manager{
         ));
         $event->trigger();
     }
+
+    public function delete_todo($todoid){
+        global $DB, $USER;
+        
+        if(!$todo = $this->get_todo($todoid)){
+            return false;
+        }
+        
+        if($DB->delete_records('local_todo', array('id' => $todoid))){
+            $event = \local_todo\event\todo_deleted::create(array(
+                'objectid' => $todo->id,
+                'userid' => $USER->id,
+                'context' => \context_system::instance(),
+                'other' => array(
+                    'name' => $todo->name
+                ),
+            ));
+            $event->trigger();
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

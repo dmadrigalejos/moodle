@@ -36,10 +36,12 @@ echo $OUTPUT->header();
 
 $manager = new \local_todo\manager;
 $addediturl = new moodle_url('/local/todo/add_edit_todo.php');
+$deleteurl = new moodle_url('/local/todo/delete_todo.php');
 
 $templatecontext = [
     'todos' => array_values($manager->get_todos()),
-    'editurl' => $addediturl
+    'editurl' => $addediturl,
+    'deleteurl' => $deleteurl,
 ];
 
 echo $OUTPUT->render_from_template('local_todo/todolist', $templatecontext);
