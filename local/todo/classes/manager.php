@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,15 +16,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * You may localized strings in your plugin
+ * Manager Class for Todo
  *
- * @package    local_todo
+ * @package    
  * @copyright  2019 Danilo Madrigalejos
  * @license    http://www.gnu.org/copyleft/gpl.html gnu gpl v3 or later
  */
+namespace local_todo;
 
-$string['pluginname'] = 'Todo';
-$string['todo'] = 'Todo';
-$string['todo:managetodo'] = 'Manage';
-$string['addtodo']='Add todo';
-$string['addsuccess']='Success!';
+defined('MOODLE_INTERNAL') || die();
+
+class manager{
+    public function create_todo($data, $editoroptions){
+        global $DB, $USER;
+        
+        $data = file_postupdate_standard_editor($data, 'description', $editoroptions, \context_system::instance(),'local_todo', 'description', 0);
+        $todoid = $DB->insert_record('local_todo',$data, true);
+        
+        $event = \local_todo\event\todo_created::create(array(
+            'objectid' => $todoid,
+            'userid' => $USER->id,
+            'context' => \context_system::instance()
+        ));
+        $event->trigger();
+        
+        return $todoid;
+    }
+}

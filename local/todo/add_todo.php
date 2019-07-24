@@ -23,9 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html gnu gpl v3 or later
  */
 
-
 require_once('../../config.php');
-
  
 require_login();
 $context = context_system::instance();
@@ -35,21 +33,29 @@ $PAGE->set_title(get_string('todo:managetodo', 'local_todo'));
 $PAGE->set_pagelayout('admin');
 require_capability('local/todo:managetodo', $context);
 
+$manager = new \local_todo\manager;
 $returnurl = new moodle_url('/local/todo/manage.php');
 
-$framework = new stdClass();
-$framework->description = '';
-$framework->description_editor = '';
-$PAGE->navbar->add(get_string('todo:managetodo', 'local_todo'), $returnurl);
+$todo = new stdClass();
+$todo->description = '';
+$todo->description_editor = '';
+$PAGE->navbar->add(get_string('todo', 'local_todo'), $returnurl);
 $PAGE->navbar->add(get_string('addtodo', 'local_todo'));
 
 $editoroptions = array('maxfiles' => 0, 'maxbytes'=>$CFG->maxbytes, 'trusttext'=>false, 'noclean'=>true, 'context' => $context);
 $customdata = array(
-    'framework' => $framework,
+    'todo' => $todo,
     'editoroptions' => $editoroptions,
 );
 $mform = new \local_todo\forms\add_todo_form(null, $customdata);
-$framework = file_prepare_standard_editor($framework, 'description', $editoroptions, $context, 'local_todo', 0);
+$todo = file_prepare_standard_editor($todo, 'description', $editoroptions, $context, 'local_todo', 0);
+
+if ($mform->is_cancelled()) {
+    redirect($returnurl);
+} else if ($data = $mform->get_data()) {
+    $todo = $manager->create_todo($data, $editoroptions);
+    redirect($returnurl, get_string('addsuccess', 'local_todo'), null, 'success');
+}
 
 echo $OUTPUT->header();
 $mform->display();

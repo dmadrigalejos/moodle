@@ -37,8 +37,14 @@ class add_todo_form extends \moodleform {
  
         $mform = $this->_form; // Don't forget the underscore! 
         
-        $framework = $this->_customdata['framework'];
+        $todo = $this->_customdata['todo'];
         $editoroptions = $this->_customdata['editoroptions'];
+
+        $mform->addElement('hidden', 'todoid', null);
+        $mform->setType('todoid', PARAM_INT);
+        if(isset($todo->id)){
+            $mform->setConstant('todoid', $todo->id);
+        }
  
         $mform->addElement('text', 'name', get_string('name'), 'maxlength="60"'); // Add elements to your form
         $mform->setType('name', PARAM_TEXT);                   //Set type of element
@@ -49,8 +55,18 @@ class add_todo_form extends \moodleform {
         
         $this->add_action_buttons();
     }
-    //TODO
+
     function validation($data, $files) {
         global $DB;
+
+        $errors = parent::validation($data, $files);
+        
+        $name = $data['name'];
+        
+        if($DB->record_exists_sql('SELECT id FROM {local_todo} WHERE name = ? AND id <> ?', array($name, $data['todoid']))){
+            $errors['name'] = get_string('error');
+        }
+        
+        return $errors;
     }
 }
