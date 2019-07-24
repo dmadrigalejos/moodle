@@ -27,20 +27,33 @@ require_once('../../config.php');
  
 require_login();
 $context = context_system::instance();
-$PAGE->set_url('/local/todo/add_todo.php');
+$PAGE->set_url('/local/todo/add_edit_todo.php');
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('todo:managetodo', 'local_todo'));
 $PAGE->set_pagelayout('admin');
 require_capability('local/todo:managetodo', $context);
 
+$id = optional_param('id', 0, PARAM_INT);
+
 $manager = new \local_todo\manager;
 $returnurl = new moodle_url('/local/todo/manage.php');
 
-$todo = new stdClass();
-$todo->description = '';
-$todo->description_editor = '';
-$PAGE->navbar->add(get_string('todo', 'local_todo'), $returnurl);
-$PAGE->navbar->add(get_string('addtodo', 'local_todo'));
+if($id !== 0){
+    $todo = $manager->get_todo($id);
+    $PAGE->navbar->add(get_string('todo:managetodo', 'local_todo'), $returnurl);
+    $PAGE->navbar->add($todo->name);
+    $PAGE->navbar->add(get_string('edit'));
+} else {
+    $todo = new stdClass();
+    $todo->description = '';
+    $todo->description_editor = '';
+    $PAGE->navbar->add(get_string('todo', 'local_todo'), $returnurl);
+    $PAGE->navbar->add(get_string('addtodo', 'local_todo'));
+}
+
+if(!$todo && $id !== 0){
+    redirect($returnurl);
+}
 
 $editoroptions = array('maxfiles' => 0, 'maxbytes'=>$CFG->maxbytes, 'trusttext'=>false, 'noclean'=>true, 'context' => $context);
 $customdata = array(
@@ -55,6 +68,8 @@ if ($mform->is_cancelled()) {
 } else if ($data = $mform->get_data()) {
     $todo = $manager->create_todo($data, $editoroptions);
     redirect($returnurl, get_string('addsuccess', 'local_todo'), null, 'success');
+} else {
+    $mform->set_data($todo);
 }
 
 echo $OUTPUT->header();

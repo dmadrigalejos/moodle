@@ -41,6 +41,22 @@ class manager{
         return $todos;
     }
 
+    /**
+     * Get todo by ID
+     * @global \local_todo\type $DB
+     * @param int $id Todo ID
+     * @return mixed Boolean or Todo object on success 
+     */
+    public static function get_todo(int $id){
+        global $DB;
+        
+        $query = 'SELECT * FROM {local_todo} WHERE id = ?';
+        if($todo = $DB->get_record_sql($query, array($id))){
+            return $todo;
+        }
+        return false;
+    }
+
     public function create_todo($data, $editoroptions){
         global $DB, $USER;
         
