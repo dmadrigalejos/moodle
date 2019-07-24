@@ -66,8 +66,15 @@ $todo = file_prepare_standard_editor($todo, 'description', $editoroptions, $cont
 if ($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $mform->get_data()) {
-    $todo = $manager->create_todo($data, $editoroptions);
-    redirect($returnurl, get_string('addsuccess', 'local_todo'), null, 'success');
+    if($data->todoid == 0){
+        //create todo here
+        $todo = $manager->create_todo($data, $editoroptions);
+        redirect($returnurl, get_string('addsuccess', 'local_todo'), null, 'success');
+    } else {
+        //update todo here;
+        $manager->update_todo($data, $editoroptions);
+        redirect($returnurl, get_string('editsuccess', 'local_todo'), null, 'success');
+    }
 } else {
     $mform->set_data($todo);
 }

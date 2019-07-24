@@ -26,4 +26,5 @@ $string['pluginname'] = 'Todo';
 $string['todo'] = 'Todo';
 $string['todo:managetodo'] = 'Manage';
 $string['addtodo']='Add todo';
-$string['addsuccess']='Success!';
+$string['addsuccess']='Add successful!';
+$string['editsuccess']='Edit successful!';

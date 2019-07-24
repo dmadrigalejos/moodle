@@ -72,4 +72,18 @@ class manager{
         
         return $todoid;
     }
+
+    public function update_todo($data, $editoroptions){
+        global $DB, $USER;
+        
+        $data->id = $data->todoid;
+        $data = file_postupdate_standard_editor($data, 'description', $editoroptions, \context_system::instance(),'local_todo', 'description', 0);
+        $DB->update_record('local_todo',$data);
+        $event = \local_todo\event\todo_updated::create(array(
+            'objectid' => $data->id,
+            'userid' => $USER->id,
+            'context' => \context_system::instance()
+        ));
+        $event->trigger();
+    }
 }
